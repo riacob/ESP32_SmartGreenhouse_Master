@@ -5,5 +5,6 @@
 - Buy and test CC1101 radio modules, implement their code
 - Implement other widgets / write a widget library with dynamic resource loader (for TFT_eSPI) ?
 - Develop the greenhouse slave and connect the two parts of the system thgough beforementioned radio module
+- Design PCBs for master and slave
 - Implement bluetooth/serial/wifi data handling (bluetooth and serial optional, wifi with mqtt broker or thingspeak)
 - Implement password admin login?
