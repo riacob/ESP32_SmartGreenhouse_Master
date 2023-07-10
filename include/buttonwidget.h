@@ -153,12 +153,15 @@ public:
         {
             _tft->setTextSize(_fontSize);
             _tft->setTextFont(_font);
+            _tft->setTextColor(_fgcolor);
             // Center the text (todo check if text is longer than button?)
             uint8_t fontSizeY = _tft->fontHeight();
             uint8_t fontSizeX = _tft->textWidth(_text, _font);
             uint16_t startX = _startx + ((_sizex - fontSizeX) / 2);
             uint16_t startY = _starty + ((_sizey - fontSizeY) / 2);
             // Print the text
+            debugln(startX);
+            debugln(startY);
             _tft->setCursor(startX, startY);
             _tft->print(_text);
         }

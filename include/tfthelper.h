@@ -189,7 +189,7 @@ namespace TFT
             btnConfig->setText("Spinbox",2,1);
 
             btnBack->draw();
-            //btnConfig->draw();
+            btnConfig->draw();
 
             if (btnBack->isPressed())
             {

@@ -8,3 +8,6 @@
 - Design PCBs for master and slave
 - Implement bluetooth/serial/wifi data handling (bluetooth and serial optional, wifi with mqtt broker or thingspeak)
 - Implement password admin login?
+
+# Limitations
+- ESP32's SRAM is "only" 320kB, not enough for 315kB needed to buffer the entire display as a sprite. It might be possible to subdivide the display in multiple sprites, but it's been deemed unnecessary for the time being.
