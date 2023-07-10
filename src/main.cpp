@@ -27,7 +27,6 @@ void setup(void)
     Radio::doSetup();
     SDCard::doSetup();
     RTC::doSetup();
-    //Radio::last_ms = millis();
     debugln("[main.cpp] setup completed");
 }
 
