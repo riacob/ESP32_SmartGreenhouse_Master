@@ -29,6 +29,14 @@ public:
         ELLIPSE
     };
 
+    enum class TooltipPositions
+    {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    };
+
 private:
     // X touch position
     uint16_t *_touchx;
@@ -63,6 +71,14 @@ private:
     uint8_t _fontSize = 1;
     // Font
     uint8_t _font = 2;
+
+    bool _tooltipPresent = false;
+    char *_tooltip = "";
+    uint8_t _tooltipFont = 2;
+    uint8_t _tooltipFontSize = 1;
+    TooltipPositions _tooltipPosition = TooltipPositions::RIGHT;
+    uint16_t _tooltipPadding = 10;
+    uint16_t _tooltipFgColor = TFT_BLACK;
 
 public:
     /**
@@ -131,7 +147,7 @@ public:
         // Draw foreground (icon or text)
         if (_hasIcon)
         {
-            _tft->drawXBitmap(_startx,_starty,_icon,_sizex,_sizey,_fgcolor);
+            _tft->drawXBitmap(_startx, _starty, _icon, _sizex, _sizey, _fgcolor);
         }
         else
         {
@@ -145,6 +161,50 @@ public:
             // Print the text
             _tft->setCursor(startX, startY);
             _tft->print(_text);
+        }
+        // Draw tooltip
+        if (_tooltipPresent)
+        {
+            _tft->setTextSize(_tooltipFontSize);
+            _tft->setTextFont(_tooltipFont);
+            uint8_t fontSizeX = _tft->textWidth(_text, _font);
+            uint8_t fontSizeY = fontSizeY = _tft->fontHeight();
+            uint8_t startX, startY;
+            switch (_tooltipPosition)
+            {
+            case TooltipPositions::RIGHT:
+            {
+                // Center the text on the right
+                startX = _startx + _sizex + _tooltipPadding;
+                startY = _starty + ((_sizey - fontSizeY) / 2);
+                break;
+            }
+            case TooltipPositions::LEFT:
+            {
+                // Center the text on the left
+                startX = _startx - fontSizeX - _tooltipPadding;
+                startY = _starty + ((_sizey - fontSizeY) / 2);
+                break;
+            }
+            case TooltipPositions::UP:
+            {
+                // Center the text up
+                startX = _startx + ((_sizex - fontSizeX) / 2);
+                startY = _starty - _tooltipPadding;
+                break;
+            }
+            case TooltipPositions::DOWN:
+            {
+                // Center the text down
+                startX = _startx + ((_sizex - fontSizeX) / 2);
+                startY = _starty + _sizey + _tooltipPadding;
+                break;
+            }
+            }
+            // Print the text
+            _tft->setTextColor(_tooltipFgColor);
+            _tft->setCursor(startX, startY);
+            _tft->print(_tooltip);
         }
     }
 
@@ -169,7 +229,7 @@ public:
 
     /**
      * @brief Sets the text of the button. Mutual alternative to setIcon.
-     * 
+     *
      * @param text: Text to be displayed
      * @param font: Font of the text
      * @param fontSize: Font size of the text
@@ -184,13 +244,93 @@ public:
 
     /**
      * @brief Sets the icon of the button. Mutual alternative to setText.
-     * 
+     *
      * @param icon: Path to the icon to be displayed
      */
     void setIcon(uint8_t *icon)
     {
         _hasIcon = true;
         _icon = icon;
+    }
+
+    /**
+     * @brief Get the X start cordinate
+     *
+     * @return uint16_t: Start x
+     */
+    uint16_t getStartX()
+    {
+        return _startx;
+    }
+
+    /**
+     * @brief Get the X end cordinate
+     *
+     * @return uint16_t: End x
+     */
+    uint16_t getEndX()
+    {
+        return _startx + _sizex;
+    }
+
+    /**
+     * @brief Get the Y start cordinate
+     *
+     * @return uint16_t: Start Y
+     */
+    uint16_t getStartY()
+    {
+        return _starty;
+    }
+
+    /**
+     * @brief Get the Y end cordinate
+     *
+     * @return uint16_t: End Y
+     */
+    uint16_t getEndY()
+    {
+        return _starty + _sizey;
+    }
+
+    /**
+     * @brief Get the X size
+     *
+     * @return uint16_t: X size
+     */
+    uint16_t getSizeX()
+    {
+        return _sizex;
+    }
+
+    /**
+     * @brief Get the Y size
+     *
+     * @return uint16_t: Y size
+     */
+    uint16_t getSizeY()
+    {
+        return _sizey;
+    }
+
+    /**
+     * @brief Sets the (optional) tooltip of a button
+     *
+     * @param tooltip: Tooltip text
+     * @param font: Tooltip font
+     * @param fontSize: Tooltip font size
+     * @param position: Placement of the tooltip
+     * @param padding: Tooltip padding (distance from buttonwidget)
+     */
+    void setTooltip(char *tooltip, uint8_t font, uint8_t fontSize, TooltipPositions position, uint16_t padding = 0, uint16_t fgcolor = TFT_BLACK)
+    {
+        _tooltipPresent = true;
+        _tooltip = tooltip;
+        _tooltipFont = font;
+        _tooltipFontSize = fontSize;
+        _tooltipPosition = position;
+        _tooltipPadding = padding;
+        _tooltipFgColor = fgcolor;
     }
 };
 

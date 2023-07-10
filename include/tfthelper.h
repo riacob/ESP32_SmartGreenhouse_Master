@@ -44,10 +44,6 @@ namespace TFT
     // Timer for touch debouncing
     long last_ms = millis();
 
-    ButtonWidget btn_IDLE_Config(&touchx,&touchy,&tft,200,350,63,63);
-    
-    ButtonWidget btn_CONFIG_Back(&touchx,&touchy,&tft,200,350,100,100);
-
     void doSetup();
     void setState(TFTStates screen);
     void IRAM_ATTR touchISR();
@@ -57,7 +53,7 @@ namespace TFT
     // initialize tft and show idle screen
     void doSetup()
     {
-        uint16_t calData[5] = {338,3387,343,3489,4};
+        uint16_t calData[5] = {338, 3387, 343, 3489, 4};
         tft.setTouch(calData);
         attachInterrupt(22, touchISR, CHANGE);
         tft.init();
@@ -95,7 +91,8 @@ namespace TFT
         {
             debugln("[tfthelper.h] new data available");
             // Refresh the screen if in idle state (homepage)
-            if (stateCurrent == TFTStates::IDLE) {
+            if (stateCurrent == TFTStates::IDLE)
+            {
                 setState(stateCurrent);
             }
             newData = false;
@@ -118,58 +115,92 @@ namespace TFT
         case TFTStates::IDLE:
         {
             debugln("IDLE");
-            // temporary UI
-            tft.fillScreen(TFT_BLACK);
-            tft.setTextColor(TFT_WHITE);
-            tft.setCursor(0, 0, 2);
-            tft.setTextSize(3);
-            tft.print("Temp1: ");
-            tft.println(Greenhouse::data.temp1);
-            tft.print("Temp2: ");
-            tft.println(Greenhouse::data.temp2);
-            tft.print("Temp3: ");
-            tft.println(Greenhouse::data.temp3);
-            tft.print("Hum1: ");
-            tft.println(Greenhouse::data.hum1);
-            tft.print("Hum2: ");
-            tft.println(Greenhouse::data.hum2);
-            tft.print("Hum3: ");
-            tft.println(Greenhouse::data.hum3);
-            RTC::readTime();
-            tft.setTextSize(1);
-            tft.print("Last update: ");
-            tft.print(RTC::currentTimeString);
-            tft.print(" ");
-            tft.println(RTC::currentDateString);
-            // CONFIG button
-            btn_IDLE_Config.setStyle(TFT_CYAN, TFT_BLACK, ButtonWidget::ButtonStyles::ELLIPSE);
-            btn_IDLE_Config.setIcon(ICONS_63X63::cog);
-            btn_IDLE_Config.draw();
-            if (btn_IDLE_Config.isPressed()) {
+            tft.fillScreen(TFT_WHITE);
+
+            ButtonWidget* btnConfig = new ButtonWidget(&touchx, &touchy, &tft, 200, 350, 63, 63);
+            ButtonWidget* btnTemp1 = new ButtonWidget(&touchx, &touchy, &tft, 20, 0, 63, 63);
+            ButtonWidget* btnTemp2 = new ButtonWidget(&touchx, &touchy, &tft, 20, 70, 63, 63);
+            ButtonWidget* btnTemp3 = new ButtonWidget(&touchx, &touchy, &tft, 20, 135, 63, 63);
+            ButtonWidget* btnHum1 = new ButtonWidget(&touchx, &touchy, &tft, 170, 0, 63, 63);
+            ButtonWidget* btnHum2 = new ButtonWidget(&touchx, &touchy, &tft, 170, 70, 63, 63);
+            ButtonWidget* btnHum3 = new ButtonWidget(&touchx, &touchy, &tft, 170, 135, 63, 63);
+
+            btnConfig->setStyle(TFT_CYAN, TFT_BLACK, ButtonWidget::ButtonStyles::ELLIPSE);
+            btnTemp1->setStyle(TFT_WHITE, TFT_RED, ButtonWidget::ButtonStyles::ROUND_RECT);
+            btnTemp2->setStyle(TFT_WHITE, TFT_RED, ButtonWidget::ButtonStyles::ROUND_RECT);
+            btnTemp3->setStyle(TFT_WHITE, TFT_RED, ButtonWidget::ButtonStyles::ROUND_RECT);
+            btnHum1->setStyle(TFT_WHITE, TFT_BLUE, ButtonWidget::ButtonStyles::ROUND_RECT);
+            btnHum2->setStyle(TFT_WHITE, TFT_BLUE, ButtonWidget::ButtonStyles::ROUND_RECT);
+            btnHum3->setStyle(TFT_WHITE, TFT_BLUE, ButtonWidget::ButtonStyles::ROUND_RECT);
+
+            btnConfig->setIcon(ICONS_63X63::cog);
+            btnTemp1->setIcon(ICONS_63X63::thermometer);
+            btnTemp2->setIcon(ICONS_63X63::thermometer);
+            btnTemp3->setIcon(ICONS_63X63::thermometer);
+            btnHum1->setIcon(ICONS_63X63::humidity);
+            btnHum2->setIcon(ICONS_63X63::humidity);
+            btnHum3->setIcon(ICONS_63X63::humidity);
+
+            btnTemp1->setTooltip("Temp1", 2, 1, ButtonWidget::TooltipPositions::RIGHT, btnTemp1->getSizeX() / 4, TFT_PURPLE);
+            btnTemp2->setTooltip("Temp2", 2, 1, ButtonWidget::TooltipPositions::RIGHT, btnTemp2->getSizeX() / 4, TFT_PURPLE);
+            btnTemp3->setTooltip("Temp3", 2, 1, ButtonWidget::TooltipPositions::RIGHT, btnTemp3->getSizeX() / 4, TFT_PURPLE);
+            btnHum1->setTooltip("Hum1", 2, 1, ButtonWidget::TooltipPositions::RIGHT, btnHum1->getSizeX() / 4, TFT_PURPLE);
+            btnHum2->setTooltip("Hum2", 2, 1, ButtonWidget::TooltipPositions::RIGHT, btnHum2->getSizeX() / 4, TFT_PURPLE);
+            btnHum3->setTooltip("Hum3", 2, 1, ButtonWidget::TooltipPositions::RIGHT, btnHum3->getSizeX() / 4, TFT_PURPLE);
+
+            btnConfig->draw();
+            btnTemp1->draw();
+            btnTemp2->draw();
+            btnTemp3->draw();
+            btnHum1->draw();
+            btnHum2->draw();
+            btnHum3->draw();
+
+            if (btnConfig->isPressed())
+            {
                 resetTouch();
                 debugln("[tfthelper.h] IDLE:CONFIG pressed");
                 setState(TFTStates::CONFIG);
             }
+
+            delete btnConfig;
+            delete btnTemp1;
+            delete btnTemp2;
+            delete btnTemp3;
+            delete btnHum1;
+            delete btnHum2;
+            delete btnHum3;
+
+
             break;
         }
         case TFTStates::CONFIG:
         {
             debugln("CONFIG");
-            // temporary UI
+
             tft.fillScreen(TFT_BLACK);
-            tft.setTextColor(TFT_WHITE);
-            tft.setCursor(0, 0, 2);
-            tft.setTextSize(3);
-            tft.println("Configuration page");
-            // BACK button
-            btn_CONFIG_Back.setStyle(TFT_PURPLE, TFT_WHITE, ButtonWidget::ButtonStyles::ROUND_RECT, 15);
-            btn_CONFIG_Back.setText("Back",2,1);
-            btn_CONFIG_Back.draw();
-            if (btn_CONFIG_Back.isPressed()) {
+
+            ButtonWidget* btnBack = new ButtonWidget(&touchx, &touchy, &tft, 200, 350, 100, 100);
+            ButtonWidget* btnConfig = new ButtonWidget(&touchx, &touchy, &tft, 100, 350, 100, 100);
+
+            btnBack->setStyle(TFT_PURPLE, TFT_WHITE, ButtonWidget::ButtonStyles::ROUND_RECT, 15);
+
+            btnBack->setText("Back", 2, 1);
+            btnConfig->setText("Spinbox",2,1);
+
+            btnBack->draw();
+            //btnConfig->draw();
+
+            if (btnBack->isPressed())
+            {
                 resetTouch();
                 debugln("[tfthelper.h] CONFIG:IDLE pressed");
                 setState(TFTStates::IDLE);
             }
+
+            delete btnBack;
+            delete btnConfig;
+
             break;
         }
         case TFTStates::TFT_CALIBRATION:
