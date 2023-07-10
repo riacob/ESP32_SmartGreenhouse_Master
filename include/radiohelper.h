@@ -1,7 +1,7 @@
 /**
  * @file radiohelper.h
- * @author your name (you@domain.com)
- * @brief
+ * @author Riccardo Iacob
+ * @brief Handles the CC1101 radio module
  * @version 0.1
  * @date 2023-07-10
  *

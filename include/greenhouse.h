@@ -1,7 +1,7 @@
 /**
  * @file greenhouse.h
- * @author your name (you@domain.com)
- * @brief 
+ * @author Riccardo Iacob
+ * @brief Contains all data regarding the greenhouse and its configuration
  * @version 0.1
  * @date 2023-07-10
  * 

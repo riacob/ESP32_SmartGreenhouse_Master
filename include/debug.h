@@ -1,7 +1,7 @@
 /**
  * @file debug.h
- * @author your name (you@domain.com)
- * @brief 
+ * @author Riccardo Iacob
+ * @brief Cleanly handles debugging
  * @version 0.1
  * @date 2023-07-09
  * 

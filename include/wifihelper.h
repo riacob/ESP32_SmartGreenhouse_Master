@@ -1,7 +1,7 @@
 /**
  * @file wifihelper.h
- * @author your name (you@domain.com)
- * @brief 
+ * @author Riccardo Iacob
+ * @brief Handles WiFi
  * @version 0.1
  * @date 2023-07-10
  * 

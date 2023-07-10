@@ -1,7 +1,7 @@
 /**
  * @file tfthelper.h
- * @author your name (you@domain.com)
- * @brief
+ * @author Riccardo Iacob
+ * @brief Handles the TFT display
  * @version 0.1
  * @date 2023-07-09
  *
@@ -16,6 +16,8 @@
 #include <xbmparser.h>
 #include "greenhouse.h"
 #include "rtchelper.h"
+#include "buttonwidget.h"
+#include "globals.h"
 #define TFT_GREY 0x5AEB
 
 namespace TFT
@@ -41,6 +43,9 @@ namespace TFT
     uint16_t touchy = 0;
     // Timer for touch debouncing
     long last_ms = millis();
+
+    ButtonWidget btn_IDLE_Config(&touchx,&touchy,&tft,200,350,63,63);
+    ButtonWidget btn_CONFIG_Back(&touchx,&touchy,&tft,200,350,100,100);
 
     void doSetup();
     void setState(TFTStates screen);
@@ -136,12 +141,10 @@ namespace TFT
             tft.print(" ");
             tft.println(RTC::currentDateString);
             // temporary touch mapping to button
-            tft.drawRect(200, 350, 100, 100, TFT_WHITE);
-            tft.setCursor(210, 370, 2);
-            tft.setTextSize(2);
-            tft.print("Config");
-            if (touchx > 200 && touchx < 300 && touchy > 350 && touchy < 450)
-            {
+            btn_IDLE_Config.setStyle(TFT_CYAN, TFT_BLACK, ButtonWidget::ButtonStyles::ELLIPSE);
+            btn_IDLE_Config.setIcon(icon_cog);
+            btn_IDLE_Config.draw();
+            if (btn_IDLE_Config.isPressed()) {
                 resetTouch();
                 debugln("[tfthelper.h] IDLE:CONFIG pressed");
                 setState(TFTStates::CONFIG);
@@ -158,14 +161,12 @@ namespace TFT
             tft.setTextSize(3);
             tft.println("Configuration page");
             // temporary touch mapping to button
-            tft.drawRect(200, 350, 100, 100, TFT_WHITE);
-            tft.setCursor(210, 370, 2);
-            tft.setTextSize(2);
-            tft.print("Back");
-            if (touchx > 200 && touchx < 300 && touchy > 350 && touchy < 450)
-            {
+            btn_CONFIG_Back.setStyle(TFT_PURPLE, TFT_WHITE, ButtonWidget::ButtonStyles::ROUND_RECT, 15);
+            btn_CONFIG_Back.setText("Back",2,1);
+            btn_CONFIG_Back.draw();
+            if (btn_CONFIG_Back.isPressed()) {
                 resetTouch();
-                debugln("[tfthelper.h] CONFIG:BACK pressed");
+                debugln("[tfthelper.h] CONFIG:IDLE pressed");
                 setState(TFTStates::IDLE);
             }
             break;
@@ -195,6 +196,7 @@ namespace TFT
             tft.setTextColor(TFT_GREEN, TFT_BLACK);
             tft.println("Calibration complete!");
             tft.println("Calibration code sent to Serial port.");
+            break;
         }
         }
     }

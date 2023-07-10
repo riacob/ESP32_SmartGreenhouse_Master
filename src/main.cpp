@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
- * @author your name (you@domain.com)
- * @brief 
+ * @author Riccardo Iacob
+ * @brief Program entry point
  * @version 0.1
  * @date 2023-07-09
  * 
