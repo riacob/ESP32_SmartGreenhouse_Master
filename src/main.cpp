@@ -11,11 +11,9 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
-#include <xbmparser.h>
 #include "debug.h"
 #include "tfthelper.h"
 #include "radiohelper.h"
-#include "sdhelper.h"
 #include "greenhouse.h"
 #include "globals.h"
 #include "rtc.h"
@@ -25,7 +23,6 @@ void setup(void)
     Serial.begin(Globals::baudrate);
     TFT::doSetup();
     Radio::doSetup();
-    SDCard::doSetup();
     RTC::doSetup();
     debugln("[main.cpp] setup completed");
 }

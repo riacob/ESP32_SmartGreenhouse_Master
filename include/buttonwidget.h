@@ -13,7 +13,6 @@
 
 #include <Arduino.h>
 #include <TFT_eSPI.h>
-#include "xbmparser.h"
 #include "debug.h"
 
 class ButtonWidget

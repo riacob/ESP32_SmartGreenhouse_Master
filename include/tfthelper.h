@@ -13,11 +13,11 @@
 
 #include <Arduino.h>
 #include <TFT_eSPI.h>
-#include <xbmparser.h>
 #include "greenhouse.h"
 #include "rtchelper.h"
 #include "buttonwidget.h"
 #include "globals.h"
+#include "icons.h"
 #define TFT_GREY 0x5AEB
 
 namespace TFT
@@ -45,6 +45,7 @@ namespace TFT
     long last_ms = millis();
 
     ButtonWidget btn_IDLE_Config(&touchx,&touchy,&tft,200,350,63,63);
+    
     ButtonWidget btn_CONFIG_Back(&touchx,&touchy,&tft,200,350,100,100);
 
     void doSetup();
@@ -140,9 +141,9 @@ namespace TFT
             tft.print(RTC::currentTimeString);
             tft.print(" ");
             tft.println(RTC::currentDateString);
-            // temporary touch mapping to button
+            // CONFIG button
             btn_IDLE_Config.setStyle(TFT_CYAN, TFT_BLACK, ButtonWidget::ButtonStyles::ELLIPSE);
-            btn_IDLE_Config.setIcon(icon_cog);
+            btn_IDLE_Config.setIcon(ICONS_63X63::cog);
             btn_IDLE_Config.draw();
             if (btn_IDLE_Config.isPressed()) {
                 resetTouch();
@@ -160,7 +161,7 @@ namespace TFT
             tft.setCursor(0, 0, 2);
             tft.setTextSize(3);
             tft.println("Configuration page");
-            // temporary touch mapping to button
+            // BACK button
             btn_CONFIG_Back.setStyle(TFT_PURPLE, TFT_WHITE, ButtonWidget::ButtonStyles::ROUND_RECT, 15);
             btn_CONFIG_Back.setText("Back",2,1);
             btn_CONFIG_Back.draw();
